@@ -1,0 +1,44 @@
+jpa:
+  
+    hibernate:
+    
+        ddl-auto: create
+
+
+
+ddl-auto:create----每次运行该程序，没有表格会新建表格，表内有数据会清空
+
+
+ddl-auto:create-drop----每次程序结束的时候会清空表
+
+
+ddl-auto:update----每次运行程序，没有表格会新建表格，表内有数据不会清空，只会更新
+
+
+ddl-auto:validate----运行程序会校验数据与数据库的字段类型是否相同，不同会报错
+
+数据库：datatime类型时间表示大于timestamp类型,timestamp必须是1970年之后的，但是timestamp会自适应时区
+
+注解@Transient表示：此属性不会出现在数据库中
+@Table 注解包含一个schema和一个catelog 属性，使用@UniqueConstraints 可以定义表的唯一约束。
+
+如果是联合约束就用下面这种
+
+@Table(name="tbl_sky",
+  uniqueConstraints = {@UniqueConstraint(columnNames={"month", "day"})})
+
+如果是单一字段约束可以用
+
+@Table(name="tbl_sky",
+  uniqueConstraints = {@UniqueConstraint(columnNames="month")})
+
+springboot结合jpa(hibernate) 创建表时默认引擎为myisam
+,更改配置：
+spring.jpa.database-platform=org.hibernate.dialect.MySQL5InnoDBDialect
+
+@Column(columnDefinition = "varchar(20) default 'LTD' not null")
+@Column(nullable = false, columnDefinition = "varchar(20) default 'LTD'")
+
+InnoDB与MYISAM两个数据库引擎区别：
+MyISAM：表级锁,线程1正在更新第2行的数据，线程2欲更新第1行数据，需等待线程1结束;读的性能很高
+InnoDB：行级锁，多行并发同时更新，支持事务，如果只是读的话，最好选用MyISAM
